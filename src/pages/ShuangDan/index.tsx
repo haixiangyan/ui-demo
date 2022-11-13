@@ -2,6 +2,8 @@ import {FC, useEffect, useRef, useState} from "react";
 import styles from './styles.module.scss';
 import classNames from "classnames";
 
+const tabHeight = 64;
+
 const ShuangDan: FC = () => {
   const [isFixed, setIsFixed] = useState<boolean>(false);
   const [active, setActive] = useState('effects');
@@ -10,13 +12,24 @@ const ShuangDan: FC = () => {
 
   const onScroll = () => {
     if (secondRef.current) {
+      // 控制 Header
       const { top } = secondRef.current.getBoundingClientRect();
       setIsFixed(top <= 0);
+
+      // 监听其它 section
+      const sections = secondRef.current.querySelectorAll('section');
+
+      Array.from(sections).forEach(sectionEl => {
+        if (sectionEl.getBoundingClientRect().top <= tabHeight) {
+          const key: string = sectionEl.getAttribute('data-id') || '';
+          setActive(key);
+        }
+      })
     }
   }
 
   const activate = (key: string) => {
-    setActive('key');
+    setActive(key);
     const el = document.querySelector(`[data-id="${key}"]`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
