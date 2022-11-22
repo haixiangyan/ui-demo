@@ -2,6 +2,7 @@ import {FC, useEffect, useRef, useState} from "react";
 import styles from './styles.module.scss';
 import classNames from "classnames";
 
+const offset = 10;
 const tabHeight = 64;
 
 const ShuangDan: FC = () => {
@@ -20,7 +21,7 @@ const ShuangDan: FC = () => {
       const sections = secondRef.current.querySelectorAll('section');
 
       Array.from(sections).forEach(sectionEl => {
-        if (sectionEl.getBoundingClientRect().top <= tabHeight) {
+        if (sectionEl.getBoundingClientRect().top <= tabHeight + offset) {
           const key: string = sectionEl.getAttribute('data-id') || '';
           setActive(key);
         }
