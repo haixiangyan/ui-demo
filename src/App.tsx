@@ -1,10 +1,10 @@
 import React from 'react';
-import ShuangDan from './pages/ShuangDan'
+import ActivityPage from './pages/ActivityPage'
 
 function App() {
   return (
     <div>
-      <ShuangDan/>
+      <ActivityPage/>
     </div>
   );
 }
