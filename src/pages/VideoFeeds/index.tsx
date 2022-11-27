@@ -1,6 +1,9 @@
 import {FC, UIEventHandler, useRef, useState} from "react";
 import NarBar from "./components/NarBar";
 import styles from './styles.module.scss';
+import {videoList1} from "./constants/data";
+import FeedList from "./components/FeedList";
+import classNames from "classnames";
 
 const VideoFeeds: FC = () => {
   const [navBarHidden, setNavBarHidden] = useState<boolean>(false);
@@ -29,9 +32,16 @@ const VideoFeeds: FC = () => {
     <div className={styles.container}>
       <NarBar hidden={navBarHidden} title="首页" />
 
-      <div className={styles.wrapper} onScroll={onScroll}>
+      <div className={classNames(styles.wrapper, { [styles.hidden]: navBarHidden } )} onScroll={onScroll}>
         <div className={styles.content} ref={contentRef}>
-          VideoFeeds
+          <h2>热门视频</h2>
+          <FeedList list={videoList1} />
+
+          <h2>追番</h2>
+          <FeedList list={videoList1} />
+
+          <h2>影视</h2>
+          <FeedList list={videoList1} />
         </div>
       </div>
     </div>

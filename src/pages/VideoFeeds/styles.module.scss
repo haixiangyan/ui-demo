@@ -1,10 +1,15 @@
 .container {
   .wrapper {
+    padding: 16px;
     height: calc(100vh - 56px);
     overflow: auto;
+    // 往下一点的状态
+    transform: translateY(0);
+    transition: transform .3s;
 
-    .content {
-      height: 1000px;
+    // 正常状态
+    &.hidden {
+      transform: translateY(-56px);
     }
   }
 }

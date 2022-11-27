@@ -1,0 +1,25 @@
+.wrapper {
+  width: 100%;
+  overflow: auto;
+
+  .feedList {
+    padding: 16px 0;
+    display: flex;
+    align-items: center;
+
+    li {
+      margin-right: 12px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      video {
+        border-radius: 6px;
+        width: 136px;
+        height: 240px;
+        background: black;
+      }
+    }
+  }
+}
