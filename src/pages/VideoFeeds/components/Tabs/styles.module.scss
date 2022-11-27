@@ -1,0 +1,30 @@
+.tabs {
+  height: 56px;
+  position: absolute;
+  top: 56px;
+  left: 0;
+  width: 100%;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  z-index: 2;
+  transition: top .3s;
+  background: white;
+
+  &.isFixed {
+    top: 0;
+    position: fixed;
+  }
+
+  li {
+    border-radius: 50px;
+    padding: 8px 16px;
+    margin-right: 16px;
+    background: #eee;
+    color: gray;
+
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+}

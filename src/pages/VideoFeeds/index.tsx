@@ -8,6 +8,7 @@ import BannerImage from './assets/banner.png';
 import FooterImage from './assets/footer.jpg';
 import { debounce } from "lodash";
 import {isInRange} from "./utils";
+import Tabs from "./components/Tabs";
 
 const VideoFeeds: FC = () => {
   const [scrolling, setScrolling] = useState<boolean>(false);
@@ -81,7 +82,7 @@ const VideoFeeds: FC = () => {
     }
 
     setScrolling(false);
-  }, 500), []);
+  }, 200), []);
 
   // 纵向滚动
   const onScroll: UIEventHandler<HTMLDivElement> = async () => {
@@ -114,6 +115,8 @@ const VideoFeeds: FC = () => {
       <NarBar hidden={navBarHidden} title="首页" />
 
       <div className={styles.line}/>
+
+      <Tabs isFixed={navBarHidden} />
 
       <div className={classNames(styles.wrapper, { [styles.hidden]: navBarHidden } )} onScroll={onScroll}>
         <img className={styles.banner} src={BannerImage} alt="Banner"/>
