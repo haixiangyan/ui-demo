@@ -7,6 +7,7 @@ import classNames from "classnames";
 import BannerImage from './assets/banner.png';
 import FooterImage from './assets/footer.jpg';
 import { debounce } from "lodash";
+import {isInRange} from "./utils";
 
 const VideoFeeds: FC = () => {
   const [scrolling, setScrolling] = useState<boolean>(false);
@@ -59,20 +60,13 @@ const VideoFeeds: FC = () => {
   // 注意：这里一定要用 useCallback，否则会一直生成新的函数
   // https://stackoverflow.com/questions/56390614/ember-debounce-called-multiple-times-on-scroll-event-listener
   const autoPlayVideos = useCallback(debounce(async () => {
-    // 检查所有 FeedList
-    const midHeight = window.innerHeight / 2;
+    // 这里可以再精确一点
+    const videoEls = Array.from(document.querySelectorAll('video'));
+    const exposureVideoEls = videoEls.filter(el => isInRange(el.getBoundingClientRect()).result);
 
-    const feedListEls = Array.from(document.querySelectorAll('[data-feed-list-id]'));
-    const targetFeedListEl = feedListEls.find(el => {
-      const { top } = el.getBoundingClientRect();
-
-      return top <= midHeight && midHeight <= top + (16 * 2 + 240);
-    })
-
-    if (targetFeedListEl) {
+    if (exposureVideoEls.length > 0) {
       // 有新的命中目标
-      const key = targetFeedListEl.getAttribute('data-feed-list-id') as ('hot' | 'live' | 'recommend')
-      const ids = dataSource[key].list.map(item => item.id).slice(0, 2);
+      const ids = exposureVideoEls.map(el => el.getAttribute('data-video-id') || '');
 
       // 原来播放的内容要暂停
       const stopIds = dynamicIdsRef.current.filter(id => !ids.includes(id));
@@ -89,6 +83,7 @@ const VideoFeeds: FC = () => {
     setScrolling(false);
   }, 500), []);
 
+  // 纵向滚动
   const onScroll: UIEventHandler<HTMLDivElement> = async () => {
     if (!scrolling) {
       pauseAllVideos(dynamicIdsRef.current);
@@ -125,13 +120,13 @@ const VideoFeeds: FC = () => {
 
         <div className={styles.content} ref={contentRef}>
           <h2>{dataSource.hot.title}</h2>
-          <FeedList listId={dataSource.hot.id} list={dataSource.hot.list} />
+          <FeedList onScroll={onScroll} listId={dataSource.hot.id} list={dataSource.hot.list} />
 
           <h2>{dataSource.live.title}</h2>
-          <FeedList listId={dataSource.live.id} list={dataSource.live.list} />
+          <FeedList onScroll={onScroll} listId={dataSource.live.id} list={dataSource.live.list} />
 
           <h2>{dataSource.recommend.title}</h2>
-          <FeedList listId={dataSource.recommend.id} list={dataSource.recommend.list} />
+          <FeedList onScroll={onScroll} listId={dataSource.recommend.id} list={dataSource.recommend.list} />
         </div>
 
         <img className={styles.banner} src={FooterImage} alt="footer"/>

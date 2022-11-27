@@ -1,17 +1,17 @@
-import {FC} from "react";
+import {FC, HTMLAttributes} from "react";
 import {VideoData} from "../../constants/data";
 import styles from './styles.module.scss';
 
-interface Props {
+interface Props extends HTMLAttributes<HTMLDivElement> {
   listId: string;
   list: VideoData[];
 }
 
 const Feed: FC<Props> = (props) => {
-  const { listId, list } = props;
+  const { listId, list, ...restProps } = props;
 
   return (
-    <div data-feed-list-id={listId} className={styles.wrapper}>
+    <div {...restProps} data-feed-list-id={listId} className={styles.wrapper}>
       <ul className={styles.feedList}>
         {list.map(video => (
           <li key={video.id}>
