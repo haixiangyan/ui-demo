@@ -1,4 +1,4 @@
-import {FC, UIEventHandler, useRef, useState} from "react";
+import {FC, UIEventHandler, useCallback, useRef, useState} from "react";
 import NarBar from "./components/NarBar";
 import styles from './styles.module.scss';
 import {dataSource} from "./constants/data";
@@ -9,13 +9,25 @@ import FooterImage from './assets/footer.jpg';
 import { debounce } from "lodash";
 
 const VideoFeeds: FC = () => {
+  const [scrolling, setScrolling] = useState<boolean>(false);
   const [navBarHidden, setNavBarHidden] = useState<boolean>(false);
 
   const dynamicIdsRef = useRef<string[]>([])
   const contentRef = useRef<HTMLDivElement>(null);
   const oldTopRef = useRef<number>(0);
 
-  const autoPlayVideos = debounce(() => {
+  // 停止所有视频
+  const pauseAllVideos = () => {
+    dynamicIdsRef.current.forEach(id => {
+      const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
+      videoEl!.pause();
+    })
+  }
+
+  // 自动播放命中视频
+  // 注意：这里一定要用 useCallback，否则会一直生成新的函数
+  // https://stackoverflow.com/questions/56390614/ember-debounce-called-multiple-times-on-scroll-event-listener
+  const autoPlayVideos = useCallback(debounce(async () => {
     // 检查所有 FeedList
     const midHeight = window.innerHeight / 2;
 
@@ -27,6 +39,7 @@ const VideoFeeds: FC = () => {
     })
 
     if (targetFeedListEl) {
+      // 有新的命中目标
       const key = targetFeedListEl.getAttribute('data-feed-list-id') as ('hot' | 'live' | 'recommend')
       const ids = dataSource[key].list.map(item => item.id).slice(0, 2);
 
@@ -41,18 +54,31 @@ const VideoFeeds: FC = () => {
       })
 
       // 需要播放的内容
-      const newPlayIds = ids.filter(id => !dynamicIdsRef.current.includes(id));
-      newPlayIds.forEach(id => {
+      ids.forEach(id => {
         const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
         videoEl?.play().then();
       })
 
       // 更新当前播放 Ids
       dynamicIdsRef.current = ids;
+    } else {
+      // 没有命中中目标，播放上一次命中的目标
+      for (const id of dynamicIdsRef.current) {
+        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
+        await videoEl?.play();
+      }
     }
-  }, 300)
 
-  const onScroll: UIEventHandler<HTMLDivElement> = () => {
+    setScrolling(false);
+  }, 500), []);
+
+  const onScroll: UIEventHandler<HTMLDivElement> = async () => {
+    if (!scrolling) {
+      pauseAllVideos();
+    }
+
+    setScrolling(true);
+
     // 隐藏 NavBar
     if (contentRef.current) {
       const { top: newTop } = contentRef.current.getBoundingClientRect();
@@ -64,12 +90,14 @@ const VideoFeeds: FC = () => {
     }
 
     // 自动播放视频
-    autoPlayVideos();
+    await autoPlayVideos();
   };
 
   return (
     <div className={styles.container}>
       <NarBar hidden={navBarHidden} title="首页" />
+
+      <div className={styles.line}/>
 
       <div className={classNames(styles.wrapper, { [styles.hidden]: navBarHidden } )} onScroll={onScroll}>
         <img className={styles.banner} src={BannerImage} alt="Banner"/>

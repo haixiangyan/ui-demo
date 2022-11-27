@@ -9,6 +9,16 @@ body {
 .container {
   height: 100vh;
 
+  .line {
+    top: 50%;
+    position: fixed;
+    transform: translateY(-50%);
+    height: 4px;
+    background: red;
+    width: 100%;
+    z-index: 3;
+  }
+
   .banner {
     width: 100%;
   }
