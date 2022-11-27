@@ -4,7 +4,7 @@ import HomeSection from "./HomeSection";
 import VideoSection from "./VideoSection";
 import CommentSection from "./CommentSection";
 
-const ActivityPage: FC = () => {
+const NewYearActivity: FC = () => {
   const [isFixed, setIsFixed] = useState<boolean>(false);
 
   return (
@@ -18,4 +18,4 @@ const ActivityPage: FC = () => {
   )
 }
 
-export default ActivityPage;
+export default NewYearActivity;

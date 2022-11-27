@@ -1,10 +1,11 @@
 import React from 'react';
-import ActivityPage from './pages/BilibiliTabsActivity'
+import {RouterProvider} from "react-router-dom";
+import router from "./router";
 
 function App() {
   return (
     <div>
-      <ActivityPage/>
+      <RouterProvider router={router} />
     </div>
   );
 }
