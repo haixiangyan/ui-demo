@@ -1,0 +1,10 @@
+.container {
+  .wrapper {
+    height: calc(100vh - 56px);
+    overflow: auto;
+
+    .content {
+      height: 1000px;
+    }
+  }
+}
