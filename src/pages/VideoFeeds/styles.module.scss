@@ -9,7 +9,14 @@
 
     // 正常状态
     &.hidden {
+      height: 100vh;
       transform: translateY(-56px);
+    }
+
+    .content {
+      h2 {
+        margin-top: 150px;
+      }
     }
   }
 }

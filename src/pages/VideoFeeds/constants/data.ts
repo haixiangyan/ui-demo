@@ -13,7 +13,7 @@ export interface VideoData {
   src: string;
 }
 
-export const videoList1: VideoData[] = [
+const videoList1: VideoData[] = [
   {
     id: '11',
     src: Video1,
@@ -36,14 +36,14 @@ export const videoList1: VideoData[] = [
   },
 ]
 
-export const videoList2: VideoData[] = [
+const videoList2: VideoData[] = [
   {
     id: '21',
-    src: Video9,
+    src: Video2,
   },
   {
     id: '22',
-    src: Video8,
+    src: Video9,
   },
   {
     id: '23',
@@ -55,14 +55,14 @@ export const videoList2: VideoData[] = [
   },
 ]
 
-export const videoList3: VideoData[] = [
+const videoList3: VideoData[] = [
   {
     id: '31',
-    src: Video2,
+    src: Video4,
   },
   {
     id: '32',
-    src: Video9,
+    src: Video8,
   },
   {
     id: '33',
@@ -77,3 +77,21 @@ export const videoList3: VideoData[] = [
     src: Video9,
   },
 ]
+
+export const dataSource = {
+  hot: {
+    id: 'hot',
+    title: '热门',
+    list: videoList1,
+  },
+  recommend: {
+    id: 'recommend',
+    title: '推荐',
+    list: videoList2,
+  },
+  live: {
+    id: 'live',
+    title: '直播',
+    list: videoList3,
+  },
+}

@@ -1,12 +1,13 @@
 import {FC, UIEventHandler, useRef, useState} from "react";
 import NarBar from "./components/NarBar";
 import styles from './styles.module.scss';
-import {videoList1} from "./constants/data";
+import {dataSource} from "./constants/data";
 import FeedList from "./components/FeedList";
 import classNames from "classnames";
 
 const VideoFeeds: FC = () => {
   const [navBarHidden, setNavBarHidden] = useState<boolean>(false);
+  const [dynamic, setDynamic] = useState<string[]>([]);
 
   const contentRef = useRef<HTMLDivElement>(null);
   const oldTopRef = useRef<number>(0);
@@ -33,14 +34,28 @@ const VideoFeeds: FC = () => {
     })
 
     if (targetFeedListEl) {
-      const videoEls: HTMLVideoElement[] = Array.from(targetFeedListEl.querySelectorAll('video'));
-      console.log('video', videoEls);
+      const key = targetFeedListEl.getAttribute('data-feed-list-id') as ('hot' | 'live' | 'recommend')
+      const ids = dataSource[key].list.map(item => item.id).slice(0, 2);
 
-      // 前两个
-      videoEls[0]?.play();
-      videoEls[1]?.play();
-      // videoEls[0]?.setAttribute('autoplay', "true");
-      // videoEls[1]?.setAttribute('autoplay', "true");
+      // 原来播放的内容要暂停
+      const stopIds = dynamic.filter(id => !ids.includes(id));
+
+      // 暂停所有
+      stopIds.forEach((id) => {
+        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
+        videoEl!.currentTime = 0;
+        videoEl!.pause();
+      })
+
+      // 需要播放的内容
+      const newPlayIds = ids.filter(id => !dynamic.includes(id));
+      newPlayIds.forEach(id => {
+        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
+        videoEl?.play().then();
+      })
+
+      // 更新当前播放 Ids
+      setDynamic(ids);
     }
   }
 
@@ -50,14 +65,14 @@ const VideoFeeds: FC = () => {
 
       <div className={classNames(styles.wrapper, { [styles.hidden]: navBarHidden } )} onScroll={onScroll}>
         <div className={styles.content} ref={contentRef}>
-          <h2>热门视频</h2>
-          <FeedList id="hot" list={videoList1} />
+          <h2>{dataSource.hot.title}</h2>
+          <FeedList listId={dataSource.hot.id} list={dataSource.hot.list} />
 
-          <h2>生活</h2>
-          <FeedList id="life" list={videoList1} />
+          <h2>{dataSource.live.title}</h2>
+          <FeedList listId={dataSource.live.id} list={dataSource.live.list} />
 
-          <h2>影视</h2>
-          <FeedList id="movie" list={videoList1} />
+          <h2>{dataSource.recommend.title}</h2>
+          <FeedList listId={dataSource.recommend.id} list={dataSource.recommend.list} />
         </div>
       </div>
     </div>
