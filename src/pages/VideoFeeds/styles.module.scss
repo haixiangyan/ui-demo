@@ -1,11 +1,20 @@
+@use "utils";
+
 .container {
+  height: 100vh;
+
+  .banner {
+    width: 100%;
+  }
+
   .wrapper {
-    padding: 16px;
     height: calc(100vh - 56px);
     overflow: auto;
     // 往下一点的状态
     transform: translateY(0);
     transition: transform .3s;
+
+    @include utils.hideScrollBar;
 
     // 正常状态
     &.hidden {
@@ -14,6 +23,8 @@
     }
 
     .content {
+      padding: 16px;
+
       h2 {
         margin-top: 150px;
       }

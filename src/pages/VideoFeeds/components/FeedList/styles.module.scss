@@ -1,6 +1,18 @@
+/**
+  * @use vs @import
+  * @use only makes variables, functions, and mixins available within the scope of the current file. It never adds them to the global scope. This makes it easy to figure out where each name your Sass file references comes from, and means you can use shorter names without any risk of collision.
+  * @use only ever loads each file once. This ensures you don’t end up accidentally duplicating your dependencies’ CSS many times over.
+  * @use must appear at the beginning your file, and cannot be nested in style rules.
+  * Each @use rule can only have one URL.
+  * @use requires quotes around its URL, even when using the indented syntax.
+ */
+@use "../../utils";
+
 .wrapper {
   width: 100%;
   overflow: auto;
+
+  @include utils.hideScrollBar;
 
   .feedList {
     padding: 16px 0;
