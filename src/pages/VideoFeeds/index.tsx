@@ -5,6 +5,7 @@ import {dataSource} from "./constants/data";
 import FeedList from "./components/FeedList";
 import classNames from "classnames";
 import BannerImage from './assets/banner.png';
+import FooterImage from './assets/footer.jpg';
 import { debounce } from "lodash";
 
 const VideoFeeds: FC = () => {
@@ -83,6 +84,12 @@ const VideoFeeds: FC = () => {
           <h2>{dataSource.recommend.title}</h2>
           <FeedList listId={dataSource.recommend.id} list={dataSource.recommend.list} />
         </div>
+
+        <img className={styles.banner} src={FooterImage} alt="footer"/>
+
+        <footer>
+          <span>@Bilbili 2022</span>
+        </footer>
       </div>
     </div>
   )

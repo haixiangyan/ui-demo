@@ -1,5 +1,11 @@
 @use "utils";
 
+body {
+  @include utils.hideScrollBar;
+  background: #fb7299;
+  color: white;
+}
+
 .container {
   height: 100vh;
 
@@ -8,7 +14,7 @@
   }
 
   .wrapper {
-    height: calc(100vh - 56px);
+    height: 100%;
     overflow: auto;
     // 往下一点的状态
     transform: translateY(0);
@@ -18,7 +24,6 @@
 
     // 正常状态
     &.hidden {
-      height: 100vh;
       transform: translateY(-56px);
     }
 
@@ -26,8 +31,19 @@
       padding: 16px;
 
       h2 {
-        margin-top: 150px;
+        margin-top: 100px;
+
+        &:first-child {
+          margin-top: 0;
+        }
       }
+    }
+
+    footer {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 64px;
     }
   }
 }
