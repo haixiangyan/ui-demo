@@ -1,4 +1,4 @@
-import {FC, UIEventHandler, useCallback, useRef, useState} from "react";
+import {FC, UIEventHandler, useCallback, useEffect, useRef, useState} from "react";
 import NarBar from "./components/NarBar";
 import styles from './styles.module.scss';
 import {dataSource} from "./constants/data";
@@ -16,12 +16,43 @@ const VideoFeeds: FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const oldTopRef = useRef<number>(0);
 
-  // 停止所有视频
-  const pauseAllVideos = () => {
-    dynamicIdsRef.current.forEach(id => {
+  // 暂停所有视频
+  const pauseAllVideos = (ids: string[]) => {
+    ids.forEach(id => {
       const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
       videoEl!.pause();
     })
+  }
+
+  // 给定 Video Id，停止所有
+  const stopAll = (ids: string[]) => {
+    const stopVideoElsSelector = ids.map(id => `[data-video-id="${id}"]`).join(',');
+    if (stopVideoElsSelector) {
+      const stopVideoEls: HTMLVideoElement[] = Array.from(document.querySelectorAll(stopVideoElsSelector));
+      stopVideoEls.forEach(videoEl => {
+        videoEl.currentTime = 0;
+        videoEl.pause();
+      })
+    }
+  }
+
+  // 给定 Video Id，开始播放
+  const playAll = async (ids: string[]) => {
+    // ids 长度为不能 0
+    if (ids.length === 0) {
+      return;
+    }
+
+    const playVideoElsSelector = ids.map(id => `[data-video-id="${id}"]`).join(',');
+
+    const playVideoEls: HTMLVideoElement[] = Array.from(document.querySelectorAll(playVideoElsSelector));
+    await Promise.all(playVideoEls.map(videoEl => videoEl.play()));
+
+    // 有更新
+    if (dynamicIdsRef.current !== ids) {
+      // 更新当前播放 Ids
+      dynamicIdsRef.current = ids;
+    }
   }
 
   // 自动播放命中视频
@@ -47,26 +78,12 @@ const VideoFeeds: FC = () => {
       const stopIds = dynamicIdsRef.current.filter(id => !ids.includes(id));
 
       // 暂停所有
-      stopIds.forEach((id) => {
-        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
-        videoEl!.currentTime = 0;
-        videoEl!.pause();
-      })
+      stopAll(stopIds);
 
       // 需要播放的内容
-      ids.forEach(id => {
-        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
-        videoEl?.play().then();
-      })
-
-      // 更新当前播放 Ids
-      dynamicIdsRef.current = ids;
+      await playAll(ids);
     } else {
-      // 没有命中中目标，播放上一次命中的目标
-      for (const id of dynamicIdsRef.current) {
-        const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
-        await videoEl?.play();
-      }
+      await playAll(dynamicIdsRef.current);
     }
 
     setScrolling(false);
@@ -74,7 +91,7 @@ const VideoFeeds: FC = () => {
 
   const onScroll: UIEventHandler<HTMLDivElement> = async () => {
     if (!scrolling) {
-      pauseAllVideos();
+      pauseAllVideos(dynamicIdsRef.current);
     }
 
     setScrolling(true);
@@ -92,6 +109,10 @@ const VideoFeeds: FC = () => {
     // 自动播放视频
     await autoPlayVideos();
   };
+
+  useEffect(() => {
+    playAll(dataSource.hot.list.slice(0, 2).map(item => item.id)).then();
+  }, []);
 
   return (
     <div className={styles.container}>
