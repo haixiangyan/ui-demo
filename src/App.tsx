@@ -1,5 +1,5 @@
 import React from 'react';
-import ActivityPage from './pages/ActivityPage'
+import ActivityPage from './pages/BilibiliTabsActivity'
 
 function App() {
   return (

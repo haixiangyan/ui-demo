@@ -1,3 +1,3 @@
 ## B 站活动页
 
-![](./ActivityPage/截图.png)
+![](BilibiliTabsActivity/截图.png)
