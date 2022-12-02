@@ -19,6 +19,20 @@ body {
     z-index: 3;
   }
 
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    transform: translateY(0);
+    z-index: 2;
+    transition: transform .3s;
+
+    &.collapse {
+      transform: translateY(-56px);
+    }
+  }
+
   .banner {
     width: 100%;
   }
@@ -33,11 +47,6 @@ body {
     transition: transform .3s;
 
     @include utils.hideScrollBar;
-
-    // 正常状态
-    &.hidden {
-      transform: translateY(-56px);
-    }
 
     .content {
       padding: 16px;

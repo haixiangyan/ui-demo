@@ -1,20 +1,13 @@
 .navBar {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 56px;
   padding: 0 16px;
-  position: relative;
   background: #fb7299;
   transition: opacity .3s, transform .3s;
   border-bottom: 1px solid white;
-  opacity: 1;
-  transform: translateY(0);
-
-  &.hidden {
-    transform: translateY(-56px);
-    opacity: 0;
-  }
 
   .goBackIcon {
     left: 16px;

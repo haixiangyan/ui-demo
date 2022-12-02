@@ -112,13 +112,17 @@ const VideoFeeds: FC = () => {
 
   return (
     <div className={styles.container}>
-      <NarBar hidden={navBarHidden} title="首页" />
-
       <div className={styles.line}/>
 
-      <Tabs isFixed={navBarHidden} />
+      <header className={classNames(styles.header, { [styles.collapse]: navBarHidden })}>
+        <NarBar title="首页" />
 
-      <div className={classNames(styles.wrapper, { [styles.hidden]: navBarHidden } )} onScroll={onScroll}>
+        <Tabs />
+      </header>
+
+      <div className={styles.wrapper} onScroll={onScroll}>
+        <div style={{ height: 56, width: '100%' }}></div>
+
         <img className={styles.banner} src={BannerImage} alt="Banner"/>
 
         <div className={styles.content} ref={contentRef}>

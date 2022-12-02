@@ -1,16 +1,9 @@
 import {FC} from "react";
 import styles from './styles.module.scss';
-import classNames from "classnames";
 
-interface Props {
-  isFixed: boolean;
-}
-
-const Tabs: FC<Props> = (props) => {
-  const { isFixed } = props;
-
+const Tabs: FC = () => {
   return (
-    <ul className={classNames(styles.tabs, { [styles.isFixed]: isFixed })}>
+    <ul className={styles.tabs}>
       <li>大会员</li>
       <li>消息</li>
       <li>动态</li>
