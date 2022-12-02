@@ -40,8 +40,6 @@ body {
   .wrapper {
     height: 100%;
     overflow: auto;
-    // 处理 Tabs
-    padding-top: 56px;
     // 往下一点的状态
     transform: translateY(0);
     transition: transform .3s;

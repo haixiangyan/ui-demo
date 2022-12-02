@@ -15,8 +15,10 @@ const VideoFeeds: FC = () => {
   const [navBarHidden, setNavBarHidden] = useState<boolean>(false);
 
   const dynamicIdsRef = useRef<string[]>([])
-  const contentRef = useRef<HTMLDivElement>(null);
   const oldTopRef = useRef<number>(0);
+
+  const offsetRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   // 暂停所有视频
   const pauseAllVideos = (ids: string[]) => {
@@ -99,7 +101,13 @@ const VideoFeeds: FC = () => {
 
       oldTopRef.current = newTop;
 
-      setNavBarHidden(delta < 0);
+      // 只有滚动超过 offset 才做交互
+      if (offsetRef.current) {
+        const { bottom: offsetBottom } = offsetRef.current.getBoundingClientRect();
+        if (offsetBottom <= 0) {
+          setNavBarHidden(delta < 0);
+        }
+      }
     }
 
     // 自动播放视频
@@ -121,7 +129,7 @@ const VideoFeeds: FC = () => {
       </header>
 
       <div className={styles.wrapper} onScroll={onScroll}>
-        <div style={{ height: 56, width: '100%' }}></div>
+        <div ref={offsetRef} style={{ height: 2 * 56, width: '100%' }}></div>
 
         <img className={styles.banner} src={BannerImage} alt="Banner"/>
 
