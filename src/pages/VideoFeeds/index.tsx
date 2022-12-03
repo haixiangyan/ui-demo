@@ -11,33 +11,38 @@ import {isInRange} from "./utils";
 import Tabs from "./components/Tabs";
 
 const VideoFeeds: FC = () => {
-  const [scrolling, setScrolling] = useState<boolean>(false);
   const [navBarHidden, setNavBarHidden] = useState<boolean>(false);
 
   const dynamicIdsRef = useRef<string[]>([])
   const oldTopRef = useRef<number>(0);
+  const isScrolling = useRef(false)
 
   const offsetRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // 暂停所有视频
   const pauseAllVideos = (ids: string[]) => {
-    ids.forEach(id => {
-      const videoEl: HTMLVideoElement | null = document.querySelector(`[data-video-id="${id}"]`)
-      videoEl!.pause();
-    })
+    if (ids.length === 0) {
+      return;
+    }
+    const pauseVideoElsSelector = ids.map(id => `[data-video-id="${id}"]`).join(',');
+    const pauseVideoEls: HTMLVideoElement[] = Array.from(document.querySelectorAll(pauseVideoElsSelector));
+    pauseVideoEls.forEach(videoEl => {
+      videoEl.pause();
+    });
   }
 
   // 给定 Video Id，停止所有
   const stopAll = (ids: string[]) => {
-    const stopVideoElsSelector = ids.map(id => `[data-video-id="${id}"]`).join(',');
-    if (stopVideoElsSelector) {
-      const stopVideoEls: HTMLVideoElement[] = Array.from(document.querySelectorAll(stopVideoElsSelector));
-      stopVideoEls.forEach(videoEl => {
-        videoEl.currentTime = 0;
-        videoEl.pause();
-      })
+    if (ids.length === 0) {
+      return;
     }
+    const stopVideoElsSelector = ids.map(id => `[data-video-id="${id}"]`).join(',');
+    const stopVideoEls: HTMLVideoElement[] = Array.from(document.querySelectorAll(stopVideoElsSelector));
+    stopVideoEls.forEach(videoEl => {
+      videoEl.pause();
+      videoEl.currentTime = 0;
+    })
   }
 
   // 给定 Video Id，开始播放
@@ -83,16 +88,16 @@ const VideoFeeds: FC = () => {
       await playAll(dynamicIdsRef.current);
     }
 
-    setScrolling(false);
+    isScrolling.current = false;
   }, 200), []);
 
   // 纵向滚动
-  const onScroll: UIEventHandler<HTMLDivElement> = async () => {
-    if (!scrolling) {
+  const onScroll: UIEventHandler<HTMLDivElement> = useCallback(async () => {
+    if (!isScrolling.current) {
       pauseAllVideos(dynamicIdsRef.current);
     }
 
-    setScrolling(true);
+    isScrolling.current = true;
 
     // 隐藏 NavBar
     if (contentRef.current) {
@@ -112,7 +117,7 @@ const VideoFeeds: FC = () => {
 
     // 自动播放视频
     await autoPlayVideos();
-  };
+  }, []);
 
   useEffect(() => {
     playAll(dataSource.hot.list.slice(0, 2).map(item => item.id)).then();
@@ -147,7 +152,7 @@ const VideoFeeds: FC = () => {
         <img className={styles.banner} src={FooterImage} alt="footer"/>
 
         <footer>
-          <span>@Bilbili 2022</span>
+          <span>@Bilibili 2022</span>
         </footer>
       </div>
     </div>
