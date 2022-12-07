@@ -3,6 +3,7 @@ import styles from './styles.module.scss';
 import {getRandomNumber} from "./utils";
 import NumberDisplay from "./components/NumberDisplay";
 import dayjs from "dayjs";
+import CancelModal from "./components/CancelModal";
 
 const PriceNumber: FC = () => {
   const [number, setNumber] = useState<number>(0);
@@ -40,6 +41,8 @@ const PriceNumber: FC = () => {
       {/*<NumberDisplay stringList={numberStrArr} />*/}
 
       <NumberDisplay stringList={timeStr} />
+
+      <CancelModal />
 
       {/*<button style={{ marginLeft: 20 }} onClick={add}>+1</button>*/}
     </div>

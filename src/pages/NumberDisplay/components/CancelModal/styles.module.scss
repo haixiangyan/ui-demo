@@ -1,0 +1,38 @@
+.image {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  background: red;
+  height: 200px;
+  width: 200px;
+  opacity: 1;
+  transition: opacity .3s, transform .3s, top .3s, left .3s;
+
+  &.hide {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.7);
+  }
+}
+
+.material {
+  display: inline-flex;
+  height: 30px;
+  width: 30px;
+  position: fixed;
+  transform: translate(-50%, -50%);
+  transition: opacity .3s, transform .3s, top .3s, left .3s;
+
+  &.hide {
+    opacity: 0;
+  }
+}
+
+.list {
+  li {
+    height: 56px;
+    width: 300px;
+    margin-bottom: 12px;
+    background: white;
+  }
+}
