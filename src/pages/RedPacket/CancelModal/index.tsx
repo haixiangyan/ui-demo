@@ -2,18 +2,23 @@ import {CSSProperties, FC, useState} from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-export interface MaterialStyles {
+export interface Material {
   id: string;
-  background: CSSProperties['background'];
-  top: CSSProperties['top'];
-  left: CSSProperties['left'];
-  width: number;
-  height: number;
-  transform?: CSSProperties['transform'];
+  src: string;
+  style: {
+    top: CSSProperties['top'];
+    left: CSSProperties['left'];
+    width: number;
+    height: number;
+    transform?: CSSProperties['transform'];
+  }
 }
 
 interface Props {
-  initMaterialStyles: MaterialStyles[];
+  visible: boolean;
+  background: string;
+  initMaterialList: Material[];
+  onClose: () => void;
 }
 
 const getImageYOrigin = (targetTop: number, targetBottom: number, middle: number) => {
@@ -30,14 +35,13 @@ const getImageYOrigin = (targetTop: number, targetBottom: number, middle: number
 }
 
 const CancelModal: FC<Props> = (props) => {
-  const { initMaterialStyles } = props;
+  const { visible, initMaterialList, background, onClose } = props;
 
   const [imageStyle, setImageStyle] = useState<CSSProperties>({});
-  const [materialStyles, setMaterialStyles] = useState<MaterialStyles[]>(initMaterialStyles);
-  const [disappear, setDisappear] = useState<boolean>(false);
+  const [materialList, setMaterialList] = useState<Material[]>(initMaterialList);
 
-  const onClose = () => {
-    if (disappear) {
+  const goPurchase = () => {
+    if (!visible) {
       return;
     }
 
@@ -47,24 +51,32 @@ const CancelModal: FC<Props> = (props) => {
     const { top: imageTop, bottom: imageBottom } = document.querySelector('#image')!.getBoundingClientRect();
 
     // 获取所有物料的 rect 数据
-    const deltaList = initMaterialStyles.map(style => {
-      const rect = document.querySelector(`[data-material-id="${style.id}"]`)!.getBoundingClientRect();
+    const deltaList = initMaterialList.map(material => {
+      const rect = document.querySelector(`[data-material-id="${material.id}"]`)!.getBoundingClientRect();
       return {
-        style,
+        material,
         deltaX: targetLeft - rect.left - rect.width / 2,
         deltaY: targetTop - rect.top - rect.height / 2,
       }
     })
 
+    const resetStyles = () => {
+      setImageStyle({});
+      setMaterialList(initMaterialList);
+    }
+
     // 计算物料的消失位置
-    const newMaterialStyles = deltaList.map<MaterialStyles>((delta) => {
+    const newMaterialList: Material[] = deltaList.map<Material>((delta) => {
       return {
-        ...delta.style,
-        opacity: 0,
-        transform: `translate(${delta.deltaX}px, ${delta.deltaY}px)`,
+        ...delta.material,
+        style: {
+          ...delta.material.style,
+          opacity: 0,
+          transform: `translate(${delta.deltaX}px, ${delta.deltaY}px)`,
+        }
       }
     })
-    setMaterialStyles(newMaterialStyles);
+    setMaterialList(newMaterialList);
 
     // 计算图片的消失位置
     const middle = (imageTop + imageBottom) / 2;
@@ -72,40 +84,39 @@ const CancelModal: FC<Props> = (props) => {
     setImageStyle({
       transformOrigin: `left ${imageYOrigin}`,
       opacity: 0,
-      transform: `translate(-50%, -50%) scale(0.6)`,
+      transform: `scale(0.6)`,
     })
 
     // 让浮动内容消失
-    const disappearInterval = newMaterialStyles.length * 200; // n * 200 ms
+    const disappearInterval = newMaterialList.length * 200; // n * 200 ms
     setTimeout(() => {
-      setDisappear(true)
+      resetStyles();
+      onClose();
     }, disappearInterval)
   }
 
   return (
     <div>
-      <div
-        id="image"
-        style={imageStyle}
-        className={classNames(styles.image, {[styles.disappear]: disappear })}>
-        图片
-        <button onClick={onClose}>取消</button>
+      {/* Modal */}
+      <div className={classNames(styles.modal, {[styles.visible]: visible})}>
+        {/*背景图红包*/}
+        <img id="image" style={imageStyle} className={styles.image} src={background} alt="红包"/>
+
+        {/*金币*/}
+        {materialList.map((material, index) => (
+          <img
+            data-material-id={material.id}
+            src={material.src}
+            key={material.id}
+            style={{ ...material.style, transitionDelay: `${index * 100}ms`}}
+            className={styles.material}
+            alt="Coin"
+          />
+        ))}
+
+        {/*购买取消*/}
+        <button className={styles.button} onClick={goPurchase}>取消</button>
       </div>
-
-      {materialStyles.map(({id, ...style}, index) => (
-        <div
-          data-material-id={id}
-          key={id}
-          style={{ ...style, transitionDelay: `${index * 100}ms`}}
-          className={classNames(styles.material, {[styles.disappear]: disappear})}
-        />
-      ))}
-
-      <ul className={styles.list}>
-        <li>9.99</li>
-        <li id="item">24.99</li>
-        <li>49.99</li>
-      </ul>
     </div>
   )
 }

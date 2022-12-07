@@ -1,40 +1,38 @@
-.image {
+.modal {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%) scale(1);
-  background: red;
-  height: 200px;
-  width: 200px;
   opacity: 1;
-  transition: opacity .3s, transform .3s, top .3s, left .3s;
+  transition: opacity .3s;
+  display: none;
+
+  .image {
+    opacity: 1;
+    transition: opacity .3s, transform .3s, top .3s, left .3s;
+    width: 400px;
+  }
+
+  .button {
+    position: absolute;
+    bottom: 55px;
+    left: 50%;
+    height: 56px;
+    width: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+  }
 }
 
 .material {
+  position: absolute;
   display: inline-flex;
   height: 30px;
   width: 30px;
-  position: fixed;
   transform: translate(-50%, -50%);
   transition: opacity .3s, transform .3s, top .3s, left .3s;
 }
 
-.disappear {
-  display: none;
-}
-
-.list {
-  height: 100vh;
+.visible {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-
-  li {
-    height: 56px;
-    width: 300px;
-    margin-bottom: 12px;
-    background: #ddd;
-  }
 }
