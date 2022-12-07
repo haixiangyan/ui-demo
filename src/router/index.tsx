@@ -1,6 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import NewYearActivity from "../pages/NewYearActivity";
 import VideoFeeds from "../pages/VideoFeeds";
+import PriceNumber from "../pages/PriceNumber";
 
 const router = createBrowserRouter([
   {
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   {
     path: '/video-feeds',
     element: <VideoFeeds />
+  },
+  {
+    path: '/price-number',
+    element: <PriceNumber />
   }
 ]);
 

@@ -2,12 +2,12 @@
 
 body {
   @include utils.hideScrollBar;
-  background: #fb7299;
-  color: white;
 }
 
 .container {
   height: 100vh;
+  background: #fb7299;
+  color: white;
 
   .line {
     top: 50%;
