@@ -8,6 +8,7 @@ import CancelModal, {MaterialStyles} from "./components/CancelModal";
 // 初始化的物料样式
 const initMaterialStyles: MaterialStyles[] = [
   {
+    id: '1',
     background: 'yellow',
     top: '50%',
     left: '40%',
@@ -15,6 +16,7 @@ const initMaterialStyles: MaterialStyles[] = [
     height: 30,
   },
   {
+    id: '2',
     background: 'purple',
     top: '50%',
     left: '45%',
@@ -22,6 +24,7 @@ const initMaterialStyles: MaterialStyles[] = [
     height: 30,
   },
   {
+    id: '3',
     background: 'pink',
     top: '50%',
     left: '50%',
@@ -29,6 +32,7 @@ const initMaterialStyles: MaterialStyles[] = [
     height: 30,
   },
   {
+    id: '4',
     background: 'blue',
     top: '50%',
     left: '55%',
