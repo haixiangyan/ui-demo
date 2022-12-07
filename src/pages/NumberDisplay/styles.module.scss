@@ -1,0 +1,14 @@
+@font-face {
+  font-family: "Smiley Sans";
+  src: url("./assets/SmileySans-Oblique.ttf");
+}
+
+.priceNumber {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100vh;
+  background: #ddd;
+  overflow: hidden;
+}

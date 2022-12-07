@@ -1,7 +1,7 @@
 import {createBrowserRouter} from "react-router-dom";
 import NewYearActivity from "../pages/NewYearActivity";
 import VideoFeeds from "../pages/VideoFeeds";
-import PriceNumber from "../pages/PriceNumber";
+import NumberDisplay from "../pages/NumberDisplay";
 
 const router = createBrowserRouter([
   {
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
     element: <VideoFeeds />
   },
   {
-    path: '/price-number',
-    element: <PriceNumber />
+    path: '/number-display',
+    element: <NumberDisplay />
   }
 ]);
 
