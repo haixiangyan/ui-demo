@@ -2,6 +2,7 @@ import {createBrowserRouter} from "react-router-dom";
 import NewYearActivity from "../pages/NewYearActivity";
 import VideoFeeds from "../pages/VideoFeeds";
 import NumberDisplay from "../pages/NumberDisplay";
+import RedPacket from "../pages/RedPacket";
 
 const router = createBrowserRouter([
   {
@@ -19,6 +20,10 @@ const router = createBrowserRouter([
   {
     path: '/number-display',
     element: <NumberDisplay />
+  },
+  {
+    path: '/red-packet',
+    element: <RedPacket />
   }
 ]);
 
