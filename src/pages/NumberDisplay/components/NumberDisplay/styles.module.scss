@@ -1,4 +1,8 @@
 .numberDisplay {
+  display: flex;
+  align-items: center;
+  user-select: none;
+
   .digitWrapper {
     margin-right: 12px;
     color: white;
@@ -21,18 +25,26 @@
     //writing-mode: vertical-lr;
     //text-orientation: upright;
 
-    .digit {
+    .digitList {
       position: absolute;
       top: 0;
       left: 50%;
-      transform: translateX(-50%);
-      transition: transform .3s;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
+      transition: transform .3s;
+      transform: translateX(-50%);
 
-      font-family: "Smiley Sans", serif;
+      .digit {
+        transition: color .3s;
+        font-family: "Smiley Sans", serif;
+        color: black;
+
+        &.active {
+          color: white;
+        }
+      }
     }
   }
 }

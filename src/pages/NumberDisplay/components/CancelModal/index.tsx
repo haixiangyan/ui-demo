@@ -2,76 +2,88 @@ import {CSSProperties, FC, useState} from "react";
 import classNames from "classnames";
 import styles from "./styles.module.scss";
 
-const materialList: CSSProperties[] = [
-  {
-    background: 'yellow',
-    top: '50%',
-    left: '10%',
-  },
-  {
-    background: 'purple',
-    top: '50%',
-    left: '20%',
-  },
-  {
-    background: 'pink',
-    top: '50%',
-    left: '30%',
-  },
-  {
-    background: 'blue',
-    top: '50%',
-    left: '40%',
-  }
-]
+export interface MaterialStyles {
+  background: CSSProperties['background'];
+  top: CSSProperties['top'];
+  left: CSSProperties['left'];
+  width: number;
+  height: number;
+}
 
-const CancelModal: FC = () => {
-  const [hideImage, setHideImage] = useState<boolean>(false);
-  const [finalPosition, setFinalPosition] = useState<CSSProperties>({});
-  const [imagePosition, setImagePosition] = useState<CSSProperties>({});
+interface Props {
+  initMaterialStyles: MaterialStyles[];
+}
+
+const getImageYOrigin = (targetTop: number, targetBottom: number, middle: number) => {
+  if (targetBottom < middle) {
+    // 上
+    return 'top';
+  } else if (targetTop > middle) {
+    // 下
+    return 'bottom';
+  } else {
+    // 中
+    return 'center';
+  }
+}
+
+const CancelModal: FC<Props> = (props) => {
+  const { initMaterialStyles } = props;
+
+  const [imageStyle, setImageStyle] = useState<CSSProperties>({});
+  const [materialStyles, setMaterialStyles] = useState<MaterialStyles[]>(initMaterialStyles);
+  const [disappear, setDisappear] = useState<boolean>(false);
 
   const onClose = () => {
-    const offset = 20;
+    if (disappear) {
+      return;
+    }
+
     // 获取目标的 top left
     const { top: targetTop, left: targetLeft, bottom: targetBottom } = document.querySelector('#item')!.getBoundingClientRect();
     // 获取图片的 top left
     const { top: imageTop, width: imageWidth, bottom: imageBottom } = document.querySelector('#image')!.getBoundingClientRect();
-    // 计算物料的位置
-    setFinalPosition({ top: targetTop + offset, left: targetLeft + offset })
-    // 计算图片的位置
+
+    // 计算物料的消失位置
+    const newMaterialStyles = initMaterialStyles.map(style => ({
+      ...style,
+      top: targetTop + style.height / 2,
+      left: targetLeft + style.width / 2,
+      opacity: 0,
+    }))
+    setMaterialStyles(newMaterialStyles);
+
+    // 计算图片的消失位置
     const middle = (imageTop + imageBottom) / 2;
-    const commonStyles: CSSProperties = {
+    const imageYOrigin = getImageYOrigin(targetTop, targetBottom, middle);
+    setImageStyle({
       left: targetLeft + imageWidth / 2,
-    }
-    setImagePosition(commonStyles);
-    if (targetBottom < middle) {
-      // 上
-      setImagePosition({ transformOrigin: 'left top', ...commonStyles })
-    } else if (targetTop > middle) {
-      // 下
-      setImagePosition({ transformOrigin: 'left bottom', ...commonStyles })
-    } else {
-      // 中
-      setImagePosition({ transformOrigin: 'left center', ...commonStyles })
-    }
-    // 隐藏
-    setHideImage(true);
+      transformOrigin: `left ${imageYOrigin}`,
+      opacity: 0,
+      transform: `translate(-50%, -50%) scale(0.7)`,
+    })
+
+    // 让浮动内容消失
+    const disappearInterval = newMaterialStyles.length * 200; // n * 200 ms
+    setTimeout(() => {
+      setDisappear(true)
+    }, disappearInterval)
   }
 
   return (
     <div>
       <div
         id="image"
-        style={imagePosition}
-        className={classNames(styles.image, {[styles.hide]: hideImage })}>
+        style={imageStyle}
+        className={classNames(styles.image, {[styles.disappear]: disappear })}>
         图片
         <button onClick={onClose}>取消</button>
       </div>
 
-      {materialList.map((material, index) => (
+      {materialStyles.map((material, index) => (
         <div
-          style={{ ...material, ...finalPosition, transitionDelay: `${index * 100}ms`}}
-          className={classNames(styles.material, styles.first, {[styles.hide]: hideImage})}
+          style={{ ...material, transitionDelay: `${index * 100}ms`}}
+          className={classNames(styles.material, {[styles.disappear]: disappear})}
         />
       ))}
 

@@ -3,7 +3,39 @@ import styles from './styles.module.scss';
 import {getRandomNumber} from "./utils";
 import NumberDisplay from "./components/NumberDisplay";
 import dayjs from "dayjs";
-import CancelModal from "./components/CancelModal";
+import CancelModal, {MaterialStyles} from "./components/CancelModal";
+
+// 初始化的物料样式
+const initMaterialStyles: MaterialStyles[] = [
+  {
+    background: 'yellow',
+    top: '50%',
+    left: '40%',
+    width: 30,
+    height: 30,
+  },
+  {
+    background: 'purple',
+    top: '50%',
+    left: '45%',
+    width: 30,
+    height: 30,
+  },
+  {
+    background: 'pink',
+    top: '50%',
+    left: '50%',
+    width: 30,
+    height: 30,
+  },
+  {
+    background: 'blue',
+    top: '50%',
+    left: '55%',
+    width: 30,
+    height: 30,
+  }
+]
 
 const PriceNumber: FC = () => {
   const [number, setNumber] = useState<number>(0);
@@ -42,7 +74,7 @@ const PriceNumber: FC = () => {
 
       <NumberDisplay stringList={timeStr} />
 
-      <CancelModal />
+      <CancelModal initMaterialStyles={initMaterialStyles} />
 
       {/*<button style={{ marginLeft: 20 }} onClick={add}>+1</button>*/}
     </div>

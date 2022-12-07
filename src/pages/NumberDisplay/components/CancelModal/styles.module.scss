@@ -8,11 +8,6 @@
   width: 200px;
   opacity: 1;
   transition: opacity .3s, transform .3s, top .3s, left .3s;
-
-  &.hide {
-    opacity: 0;
-    transform: translate(-50%, -50%) scale(0.7);
-  }
 }
 
 .material {
@@ -22,10 +17,10 @@
   position: fixed;
   transform: translate(-50%, -50%);
   transition: opacity .3s, transform .3s, top .3s, left .3s;
+}
 
-  &.hide {
-    opacity: 0;
-  }
+.disappear {
+  display: none;
 }
 
 .list {
