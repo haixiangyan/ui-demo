@@ -3,6 +3,7 @@ import NewYearActivity from "../pages/NewYearActivity";
 import VideoFeeds from "../pages/VideoFeeds";
 import NumberDisplay from "../pages/NumberDisplay";
 import RedPacket from "../pages/RedPacket";
+import ReduxPage from "../pages/ReduxPage";
 
 const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ const router = createBrowserRouter([
   {
     path: '/red-packet',
     element: <RedPacket />
-  }
+  },
+  {
+    path: '/redux-page',
+    element: <ReduxPage />
+  },
 ]);
 
 export default router;
